@@ -13,6 +13,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import useProject from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
 import {
   Bot,
@@ -24,6 +25,17 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+type Project = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  name: string;
+  githubUrl: string;
+  deletedAt?: Date | null;
+  userToProjects: unknown[]; // Replace `unknown` with the actual type if defined
+};
+
 
 const items = [
   {
@@ -48,21 +60,12 @@ const items = [
   },
 ];
 
-const project = [
-  {
-    name: "project1",
-  },
-  {
-    name: "project2",
-  },
-  {
-    name: "project3",
-  },
-];
+
 
 export function AppSidebar() {
   const pathname = usePathname();
   const { open } = useSidebar();
+  const { projects, projectId, setProjectId } = useProject();
   return (
     <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
@@ -103,16 +106,18 @@ export function AppSidebar() {
           <SidebarGroupLabel>Your Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {project.map((proj) => {
+              {projects?.map((proj: Project) => {
                 return (
                   <SidebarMenuItem key={proj.name}>
                     <SidebarMenuButton asChild>
-                      <div>
+                      <div onClick={() => {
+                        setProjectId(proj.id)
+                      }}>
                         <div
                           className={cn(
                             "flex size-6 items-center justify-center rounded-sm border bg-white text-sm text-primary",
                             {
-                              "bg-primary text-white": true,
+                              "bg-primary text-white": proj.id === projectId,
                             },
                           )}
                         >
