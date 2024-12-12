@@ -106,7 +106,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Your Projects</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {projects?.map((proj: Project) => {
+              {projects?.map((proj) => {
                 return (
                   <SidebarMenuItem key={proj.name}>
                     <SidebarMenuButton asChild>
